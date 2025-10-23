@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:secretsauce/routes/app_routes.dart';
-import 'package:secretsauce/theme/app_theme.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:secretsauce/core/routes/app_routes.dart';
+import 'package:secretsauce/core/theme/app_theme.dart';
 
 void main(){
-  runApp(SecretSauce());
+  runApp(ProviderScope(child: SecretSauce()));
 }
 class SecretSauce extends StatelessWidget {
   const SecretSauce({super.key});
