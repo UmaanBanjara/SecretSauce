@@ -45,6 +45,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       };
 
     try{
+    // ignore: unused_local_variable
     final result = await ref.read(signupProvider(formData).future);
 
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('User Created SuccessFully. Please Check Your Email')));
