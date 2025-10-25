@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:secretsauce/core/constants/app_strings.dart';
 import 'package:secretsauce/core/routes/routes_string.dart';
+import 'package:secretsauce/core/validators/validators.dart';
+import 'package:secretsauce/core/widgets/custom_snackbar.dart';
 import 'package:secretsauce/features/auth/presentation/providers/signup_provider.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -15,6 +17,7 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  final _formkey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final fnameController = TextEditingController();
   final lnameController = TextEditingController();
@@ -37,29 +40,33 @@ class _SignupScreenState extends State<SignupScreen> {
       _isLoading = true;
     });
     final formData = {
-                        'email' : emailController.text,
-                        'fname' : fnameController.text,
-                        'lname' : lnameController.text,
-                        'username' : usernameController.text,
-                        'passwd' : passwdController.text
-                      };
+      'email' : emailController.text,
+      'fname' : fnameController.text,
+      'lname' : lnameController.text,
+      'username' : usernameController.text,
+      'passwd' : passwdController.text
+    };
 
     try{
-    // ignore: unused_local_variable
-    final result = await ref.read(signupProvider(formData).future);
-
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('User Created SuccessFully. Please Check Your Email')));
-    context.push(RoutesString.otp);
+      
+      // ignore: unused_local_variable
+      final result = await ref.read(signupProvider(formData).future);
+      
+      showCustomSnackbar(context, "User Created SuccessFully. Please Check Your Email" , isError: false);
+      context.push(RoutesString.otp , extra: {
+        'email' : emailController.text,
+        'fname' : fnameController.text,
+        'userId' : result.userId
+      } );
 
     }catch(e){
-      print('Error : $e');
+      showCustomSnackbar(context, "Something went wrong", isError: true);
     }
     finally{
       setState(() {
         _isLoading = false;
       });
     }
-    
   }
 
   @override
@@ -84,144 +91,193 @@ class _SignupScreenState extends State<SignupScreen> {
                     width: 4,
                   ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      AppStrings.CreateAccount,
-                      style: TextStyle(
-                        fontFamily: GoogleFonts.poppins().fontFamily,
-                        fontSize: 24,
-                      ),
-                    ),
-                    SizedBox(height: 12),
-        
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        AppStrings.Email,
+                child: Form(
+                  key : _formkey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        AppStrings.CreateAccount,
                         style: TextStyle(
                           fontFamily: GoogleFonts.poppins().fontFamily,
-                          fontSize: 18,
+                          fontSize: 24,
                         ),
                       ),
-                    ),
-                    SizedBox(height: 10),
-                    TextField(
-                      controller: emailController,
-                      style: TextStyle(
-                        fontFamily: GoogleFonts.poppins().fontFamily,
-                      ),
-                      decoration: InputDecoration(
-                        hintText: AppStrings.EnterEmail,
-                      ),
-                    ),
-                    SizedBox(height: 12),
-        
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        AppStrings.FirstName,
-                        style: TextStyle(
-                          fontFamily: GoogleFonts.poppins().fontFamily,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    TextField(
-                      controller : fnameController,
-                      style: TextStyle(
-                        fontFamily: GoogleFonts.poppins().fontFamily,
-                      ),
-                      decoration: InputDecoration(
-                        hintText: AppStrings.HintFirstName,
-                      ),
-                    ),
-                    SizedBox(height: 12),
-        
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        AppStrings.LastName,
-                        style: TextStyle(
-                          fontFamily: GoogleFonts.poppins().fontFamily,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    TextField(
-                      controller : lnameController,
-                      style: TextStyle(
-                        fontFamily: GoogleFonts.poppins().fontFamily,
-                      ),
-                      decoration: InputDecoration(
-                        hintText: AppStrings.HintLastName,
-                      ),
-                    ),
-                    SizedBox(height: 12),
-        
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        AppStrings.UserName,
-                        style: TextStyle(
-                          fontFamily: GoogleFonts.poppins().fontFamily,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    TextField(
-                      controller : usernameController,
-                      style: TextStyle(
-                        fontFamily: GoogleFonts.poppins().fontFamily,
-                      ),
-                      decoration: InputDecoration(
-                        hintText: AppStrings.HintUserName,
-                      ),
-                    ),
-                    SizedBox(height: 12),
-        
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        AppStrings.Password,
-                        style: TextStyle(
-                          fontFamily: GoogleFonts.poppins().fontFamily,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    TextField(
-                      controller : passwdController,
-                      obscureText: true,
-                      style: TextStyle(
-                        fontFamily: GoogleFonts.poppins().fontFamily,
-                      ),
-                      decoration: InputDecoration(
-                        hintText: AppStrings.HintPassword,
-                      ),
-                    ),
-                    SizedBox(height: 15),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: RichText(
-                        text: TextSpan(
-                          text: AppStrings.HaveAccount,
+                      SizedBox(height: 12),
+                          
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          AppStrings.Email,
                           style: TextStyle(
                             fontFamily: GoogleFonts.poppins().fontFamily,
-                            fontSize: 14,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      TextFormField(
+                        controller: emailController,
+                        style: TextStyle(
+                          fontFamily: GoogleFonts.poppins().fontFamily,
+                        ),
+                        decoration: InputDecoration(
+                          hintText: AppStrings.EnterEmail,
+                        ),
+                        validator: Validators.validateGmail,
+                      ),
+                      SizedBox(height: 12),
+                          
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          AppStrings.FirstName,
+                          style: TextStyle(
+                            fontFamily: GoogleFonts.poppins().fontFamily,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      TextFormField(
+                        controller : fnameController,
+                        style: TextStyle(
+                          fontFamily: GoogleFonts.poppins().fontFamily,
+                        ),
+                        decoration: InputDecoration(
+                          hintText: AppStrings.HintFirstName,
+                        ),
+                        validator: Validators.validateFirstName,
+                      ),
+                      SizedBox(height: 12),
+                          
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          AppStrings.LastName,
+                          style: TextStyle(
+                            fontFamily: GoogleFonts.poppins().fontFamily,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      TextFormField(
+                        controller : lnameController,
+                        style: TextStyle(
+                          fontFamily: GoogleFonts.poppins().fontFamily,
+                        ),
+                        decoration: InputDecoration(
+                          hintText: AppStrings.HintLastName,
+                        ),
+                        validator: Validators.validateLastName,
+                      ),
+                      SizedBox(height: 12),
+                          
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          AppStrings.UserName,
+                          style: TextStyle(
+                            fontFamily: GoogleFonts.poppins().fontFamily,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      TextFormField(
+                        controller : usernameController,
+                        style: TextStyle(
+                          fontFamily: GoogleFonts.poppins().fontFamily,
+                        ),
+                        decoration: InputDecoration(
+                          hintText: AppStrings.HintUserName,
+                        ),
+                        validator: Validators.validateUsername,
+                      ),
+                      SizedBox(height: 12),
+                          
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          AppStrings.Password,
+                          style: TextStyle(
+                            fontFamily: GoogleFonts.poppins().fontFamily,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      TextFormField(
+                        controller : passwdController,
+                        obscureText: true,
+                        style: TextStyle(
+                          fontFamily: GoogleFonts.poppins().fontFamily,
+                        ),
+                        decoration: InputDecoration(
+                          hintText: AppStrings.HintPassword,
+                        ),
+                        validator: Validators.validatePassword,
+                      ),
+                      SizedBox(height: 15),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: RichText(
+                          text: TextSpan(
+                            text: AppStrings.HaveAccount,
+                            style: TextStyle(
+                              fontFamily: GoogleFonts.poppins().fontFamily,
+                              fontSize: 14,
+                              color: Colors.white,
+                            ),
+                            children: [
+                              TextSpan(
+                                text: AppStrings.Login,
+                                style: TextStyle(
+                                  fontFamily: GoogleFonts.poppins().fontFamily,
+                                  fontSize: 16,
+                                  color: theme.primaryColor,
+                                ),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                  },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed : _isLoading ? null : (){
+                          if(_formkey.currentState!.validate()){
+                            _onSignup(ref);
+                          }
+                        },
+                        child: 
+                        _isLoading 
+                        ? const CircularProgressIndicator(color : Color(0xFFAACF9C)) 
+                        : Text(AppStrings.Signup,
+                            style: TextStyle(
+                              fontFamily: GoogleFonts.poppins().fontFamily,
+                            ),
+                          ),
+                      ),
+                      SizedBox(height: 15),
+                      RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(
+                          text: AppStrings.ByCreating,
+                          style: TextStyle(
+                            fontFamily: GoogleFonts.poppins().fontFamily,
+                            fontSize: 12,
                             color: Colors.white,
                           ),
                           children: [
                             TextSpan(
-                              text: AppStrings.Login,
+                              text: AppStrings.TOS,
                               style: TextStyle(
-                                fontFamily: GoogleFonts.cinzel().fontFamily,
-                                fontSize: 16,
+                                fontFamily: GoogleFonts.poppins().fontFamily,
+                                fontSize: 12,
                                 color: theme.primaryColor,
                               ),
                               recognizer: TapGestureRecognizer()
@@ -231,55 +287,8 @@ class _SignupScreenState extends State<SignupScreen> {
                           ],
                         ),
                       ),
-                    ),
-                    SizedBox(height: 20),
-                    ElevatedButton(
-                      // final formData = {
-                      //   'email' : emailController.text,
-                      //   'fname' : fnameController.text,
-                      //   'lname' : lnameController.text,
-                      //   'username' : usernameController.text,
-                      //   'passwd' : passwdController.text
-                      // };
-
-                      // ref.read(signupProvider(formData).future).then((response){
-                      //   context.push(RoutesString.otp , extra: {"user_id" : response.userId});
-                      // }).catchError((e){
-                      //   ScaffoldMessenger.of(context).showSnackBar(
-                      //     SnackBar(content: Text(e.toString()))
-                      //   );
-                      // });
-
-                    onPressed : _isLoading ? null : () => _onSignup(ref),
-                    child: 
-                    _isLoading ? const CircularProgressIndicator() :
-                    Text(AppStrings.Signup)),
-                    SizedBox(height: 15),
-                    RichText(
-                      textAlign: TextAlign.center,
-                      text: TextSpan(
-                        text: AppStrings.ByCreating,
-                        style: TextStyle(
-                          fontFamily: GoogleFonts.poppins().fontFamily,
-                          fontSize: 12,
-                          color: Colors.white,
-                        ),
-                        children: [
-                          TextSpan(
-                            text: AppStrings.TOS,
-                            style: TextStyle(
-                              fontFamily: GoogleFonts.cinzel().fontFamily,
-                              fontSize: 12,
-                              color: theme.primaryColor,
-                            ),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                              },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
