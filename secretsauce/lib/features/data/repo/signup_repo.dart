@@ -36,10 +36,10 @@ class SignupRepo {
       
     );
     if(response.statusCode == 200){
-      return MessageResponse.fromJson(jsonDecode(response.data));
+      return MessageResponse.fromJson(response.data);
     }
     else{
-      throw Exception(jsonDecode(response.data)['detail'] ?? "Something went wrong");
+      throw Exception(response.data['detail'] ?? "Something went wrong");
     }
   }
   
