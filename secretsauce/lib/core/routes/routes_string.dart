@@ -3,5 +3,6 @@ class RoutesString {
   static final String login = '/login';
   static final String tos = '/tos';
   static final String otp = '/otp';
+  static final String home = '/home';
   
 }
