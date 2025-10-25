@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:secretsauce/core/routes/routes_string.dart';
+import 'package:secretsauce/features/auth/presentation/screens/homescreen.dart';
 import 'package:secretsauce/features/auth/presentation/screens/login_screen.dart';
 import 'package:secretsauce/features/auth/presentation/screens/otp_screen.dart';
 import 'package:secretsauce/features/auth/presentation/screens/signup_screen.dart';
@@ -23,6 +24,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path : RoutesString.signup,
       builder : (context , state) => SignupScreen()
+    ),
+    GoRoute(
+      path : RoutesString.home,
+      builder : (context , state) => Homescreen()
     )
   ]
 );
