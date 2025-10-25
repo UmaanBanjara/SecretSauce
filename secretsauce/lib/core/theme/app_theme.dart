@@ -15,7 +15,7 @@ class SecretSauceTheme{
           borderRadius: BorderRadius.circular(12)
         ),
         textStyle: TextStyle(
-          fontFamily: GoogleFonts.cinzel().fontFamily,
+          fontFamily: GoogleFonts.poppins().fontFamily,
           fontSize: 18
         )
       )
@@ -29,7 +29,7 @@ class SecretSauceTheme{
 
       ),
       hintStyle: TextStyle(
-        fontFamily: GoogleFonts.cinzel().fontFamily,
+        fontFamily: GoogleFonts.poppins().fontFamily,
 
       ),
       enabledBorder: OutlineInputBorder(
@@ -39,7 +39,7 @@ class SecretSauceTheme{
         borderSide: BorderSide(color : Colors.grey)
       ),
       labelStyle: TextStyle(
-        fontFamily: GoogleFonts.cinzel().fontFamily,
+        fontFamily: GoogleFonts.poppins().fontFamily,
       ),
       
     ),
